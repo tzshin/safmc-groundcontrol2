@@ -17,7 +17,7 @@ class ESPKenisisManager:
         self.__logger = logging.getLogger(__name__)
         self.__logger.info("Initializing ESPKenisisManager")
 
-        self.__data_handlers = {}
+        self.__data_handlers: dict[str, Callable[[dict], None]] = {}
         self.__data_handlers["targets_update"] = self.__handle_targets_update
 
     def get_all_ports(self):
