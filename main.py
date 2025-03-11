@@ -3,7 +3,7 @@ import os
 import logging
 from readable_log_formatter import ReadableFormatter
 
-from ui.espk_window import ESPKenisisWindow
+from ui.window import ESPKenisisWindow
 
 
 if __name__ == "__main__":
