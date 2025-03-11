@@ -5,7 +5,7 @@ import logging
 from core.manager import ESPKenisisManager
 
 
-class ESPKenisisUI:
+class ESPKenisisWindow:
     def __init__(self, theme: str, scale: float, refresh_rate_ms: int = 100):
         os.environ["XDG_SESSION_TYPE"] = "xcb"
         sg.theme(theme)

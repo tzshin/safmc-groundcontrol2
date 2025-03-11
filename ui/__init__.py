@@ -1,4 +1,4 @@
-from ui.espk_window import ESPKenisisUI
+from ui.espk_window import ESPKenisisWindow
 
 
-__all__ = ['ESPKenisisUI']
+__all__ = ['ESPKenisisWindow']

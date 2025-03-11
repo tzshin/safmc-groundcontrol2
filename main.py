@@ -3,7 +3,7 @@ import os
 import logging
 from readable_log_formatter import ReadableFormatter
 
-from ui.espk_window import ESPKenisisUI
+from ui.espk_window import ESPKenisisWindow
 
 
 if __name__ == "__main__":
@@ -18,5 +18,5 @@ if __name__ == "__main__":
     ui_theme = os.getenv("UI_THEME")
     ui_scale = os.getenv("UI_SCALE")
 
-    ui = ESPKenisisUI(theme=ui_theme, scale=ui_scale)
+    ui = ESPKenisisWindow(theme=ui_theme, scale=ui_scale)
     ui.run()
