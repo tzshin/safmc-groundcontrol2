@@ -2,10 +2,10 @@ import PySimpleGUI as sg
 import os
 import logging
 
-from core.manager import ESPKenisisManager
+from core.manager import ESPKinesisManager
 
 
-class ESPKenisisWindow:
+class ESPKinesisWindow:
     def __init__(self, theme: str, scale: float, refresh_rate_ms: int = 100):
         os.environ["XDG_SESSION_TYPE"] = "xcb"
         sg.theme(theme)
@@ -15,15 +15,15 @@ class ESPKenisisWindow:
         )
 
         self.__logger = logging.getLogger(__name__)
-        self.__logger.info("Initializing ESPKenisisUI")
+        self.__logger.info("Initializing ESPKinesisUI")
 
         self.__font_smaller = (sg.DEFAULT_FONT[0], sg.DEFAULT_FONT[1] - 2)
         self.__font_larger = (sg.DEFAULT_FONT[0], sg.DEFAULT_FONT[1] + 4)
 
-        self.__manager = ESPKenisisManager(
+        self.__manager = ESPKinesisManager(
             callback_on_targets_update=self.__on_targets_update
         )
-        self.__window_title = "ESPKenisis Radio Link Manager"
+        self.__window_title = "ESPKenesis Radio Link Manager"
         self.__refresh_rate_ms = refresh_rate_ms
         self.__window = None
 
@@ -31,7 +31,7 @@ class ESPKenisisWindow:
 
     def __init_ui(self):
         column_targets_content = [
-            [sg.Text("Connect to ESPKenisis transmitter to view targets")]
+            [sg.Text("Connect to ESPKinesis transmitter to view targets")]
         ]
         self.__create_window(column_targets_content)
 
@@ -136,7 +136,7 @@ class ESPKenisisWindow:
                 self.__window["-CF-CONNECT-"].update(disabled=False)
                 self.__window["-CF-DISCONNECT-"].update(disabled=True)
                 self.__window["-TARGET-COLUMN-"].update(
-                    [sg.Text("Connect to ESPKenisis transmitter to view targets")]
+                    [sg.Text("Connect to ESPKinesis transmitter to view targets")]
                 )
                 self.__logger.info("Disconnected successfully")
 

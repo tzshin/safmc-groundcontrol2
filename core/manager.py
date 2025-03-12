@@ -11,7 +11,7 @@ from espkenisis_msgs.msg import ChannelOverride
 from .target import Target
 
 
-class ESPKenisisManager:
+class ESPKinesisManager:
     def __init__(self, callback_on_targets_update: Callable[[dict], None]):
         self.__callback_on_targets_update = callback_on_targets_update
 
@@ -21,7 +21,7 @@ class ESPKenisisManager:
         self.__read_serial_thread = None
 
         self.__logger = logging.getLogger(__name__)
-        self.__logger.info("Initializing ESPKenisisManager")
+        self.__logger.info("Initializing ESPKinesisManager")
 
         self.__data_handlers: dict[str, Callable[[dict], None]] = {}
         self.__data_handlers["targets_update"] = self.__handle_targets_update
@@ -131,7 +131,7 @@ class ESPKenisisManager:
 
         try:
             rclpy.init()
-            self.__ros_node = rclpy.create_node("espkenisis_manager")
+            self.__ros_node = rclpy.create_node("espkinesis_manager")
             self.__is_ros_running = True
             self.__logger.debug("Initialized ROS node")
 
@@ -178,7 +178,7 @@ class ESPKenisisManager:
                 qos = QoSProfile(depth=10)
                 sub = self.__ros_node.create_subscription(
                     ChannelOverride,
-                    f"espkenisis/{target.id}/channel_override",
+                    f"espkinesis/{target.id}/channel_override",
                     lambda msg, target_id=target.id: self.__process_channel_override(
                         msg, target_id
                     ),

@@ -1,4 +1,4 @@
-from core.manager import ESPKenisisManager
+from core.manager import ESPKinesisManager
 
 
-__all__ = ['ESPKenisisManager']
+__all__ = ['ESPKinesisManager']
