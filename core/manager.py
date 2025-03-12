@@ -43,13 +43,13 @@ class ESPKenisisManager:
             self.__logger.info(f"Connecting to {port} at {baudrate} baud")
             self.__serial = serial.Serial(port, baudrate, timeout=1)
             self.__is_connected = True
-            
+
             self.__read_serial_thread = threading.Thread(
                 target=self.__read_serial, daemon=True
             )
             self.__read_serial_thread.start()
             self.__logger.debug("Started serial read thread")
-            
+
             self.__logger.info(f"Successfully connected to {port}")
 
             self.__start_ros()
@@ -67,7 +67,7 @@ class ESPKenisisManager:
         self.__serial = None
         self.__is_connected = False
         self.__read_serial_thread = None
-        
+
         self.__stop_ros()
         self.__logger.info("Disconnected")
 
@@ -82,7 +82,7 @@ class ESPKenisisManager:
                 if self.__serial.in_waiting > 0:
                     new_data = self.__serial.read(self.__serial.in_waiting).decode()
                     buffer += new_data
-                    
+
                     lines = buffer.split("\n")
                     buffer = lines.pop()
 
@@ -179,8 +179,10 @@ class ESPKenisisManager:
                 sub = self.__ros_node.create_subscription(
                     ChannelOverride,
                     f"espkenisis/{target.id}/channel_override",
-                    lambda msg, target_id=target.id: self.__process_channel_override(msg, target_id),
-                    qos
+                    lambda msg, target_id=target.id: self.__process_channel_override(
+                        msg, target_id
+                    ),
+                    qos,
                 )
                 self.__ros_subs[target.id] = sub
                 self.__logger.debug(f"Created ROS subscription for target {target.id}")
@@ -189,42 +191,54 @@ class ESPKenisisManager:
         if not self.__is_connected:
             self.__logger.error("Not connected to ESPKenisis")
             return
-        
+
         try:
             channels = list(msg.channels)
             duration = msg.duration
             bypass_safety = msg.bypass_safety
 
             if len(channels) > 16:
-                self.__logger.error(f"Channel override for target {target_id} has too many channels: {len(channels)}, maximum is 16")
+                self.__logger.error(
+                    f"Channel override for target {target_id} has too many channels: {len(channels)}, maximum is 16"
+                )
                 return
 
             if not bypass_safety:
                 if len(channels) > 4:
                     channels = channels[:4]
-                    self.__logger.debug(f"Safety feature applied: limited to first 4 channels for target ID {target_id}")
+                    self.__logger.debug(
+                        f"Safety feature applied: limited to first 4 channels for target ID {target_id}"
+                    )
 
             self.__send_override_command(target_id, channels, duration)
-            self.__logger.debug(f"Processed ROS2 override command for target ID {target_id}")
+            self.__logger.debug(
+                f"Processed ROS2 override command for target ID {target_id}"
+            )
         except Exception as e:
-            self.__logger.error(f"Error processing ROS2 override command: {e}", exc_info=True)
+            self.__logger.error(
+                f"Error processing ROS2 override command: {e}", exc_info=True
+            )
 
-    def __send_override_command(self, target_id: int, channels: list[int], duration: int):
+    def __send_override_command(
+        self, target_id: int, channels: list[int], duration: int
+    ):
         if not self.__is_connected or not self.__serial:
             self.__logger.error("Serial not connected")
             return
-            
+
         command = {
             "type": "override_channels",
             "target_id": target_id,
             "channels": channels,
-            "duration": duration
+            "duration": duration,
         }
-        
+
         try:
             command_json = json.dumps(command) + "\n"
 
             self.__serial.write(command_json.encode())
-            self.__logger.debug(f"Sent override command to target {target_id}: {channels} for {duration}ms")
+            self.__logger.debug(
+                f"Sent override command to target {target_id}: {channels} for {duration}ms"
+            )
         except Exception as e:
-            self.__logger.error(f"Failed to send override command: {e}", exc_info=True)    
+            self.__logger.error(f"Failed to send override command: {e}", exc_info=True)
